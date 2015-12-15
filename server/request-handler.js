@@ -11,7 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var events = require('events');
 exports.requestHandler = function(request, response) {
   var defaultCorsHeaders = {
     "access-control-allow-origin": "*",
@@ -46,12 +46,31 @@ exports.requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = "application/json";
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
-
+  if (request.url === "/classes/messages" && request.method === "GET") {
+    var results = {'results': storage};
+    response.writeHead(200, headers);
+    console.log("/classes/messages");
+    response.end(JSON.stringify(results));
+  } else if (request.url === "/classes/messages" && request.method === "OPTIONS") {
+    console.log('inside OPSTIONS');
+    response.writeHead(200, headers);
+    response.end();
+  } else if (request.url === "/classes/messages" && request.method === "POST") {
+    console.log('inside POST');
+    var body = "";
+    request.on('data', function(data) {
+      body += data;
+    });
+    request.on('end', function(data){
+      response.writeHead(201, headers);
+      storage.push(JSON.parse(body));
+      response.end(JSON.stringify(storage));
+    });
+  }
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
@@ -59,9 +78,9 @@ exports.requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end("Hello, World!");
 };
 
+var storage = [];
 // These headers will allow Cross-Origin Resource Sharing (CORS).
 // This code allows this server to talk to websites that
 // are on different domains, for instance, your chat client.

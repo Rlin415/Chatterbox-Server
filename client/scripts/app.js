@@ -1,6 +1,6 @@
 // YOUR CODE HERE:
 var app = {
-  server: 'https://api.parse.com/1/classes/chatterbox',
+  server: 'http://127.0.0.1:3000/classes/messages',
   invalid: ['script', 'img', 'body', 'iframe', 'input', 'link', 'table', 'div', 'object']
 };
 
@@ -59,7 +59,8 @@ app.fetch = function() {
     url: app.server,
     type: 'GET',
     contentType: 'application/json',
-    data: 'where={"roomname":"' + client.currRoom + '"}',
+    // data: 'where={"roomname":"' + client.currRoom + '"}',
+    data: "",
     success: function(data) {
       console.log('Retrieved', data, 'for room:' , client.currRoom);
       client.messages = [];
@@ -115,6 +116,7 @@ app.handleSubmit = function() {
     text: $('#message').val(),
     roomname: client.currRoom
   };
+  console.log(message);
   app.send(message);
 };
 
