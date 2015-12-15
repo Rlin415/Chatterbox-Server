@@ -50,16 +50,17 @@ exports.requestHandler = function(request, response) {
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  if (request.url === "/classes/messages" && request.method === "GET") {
+  var routes = request.url.split('/');
+  console.log(routes);
+  if (routes[1] === "classes" && request.method === "GET") {
     var results = {'results': storage};
     response.writeHead(200, headers);
-    console.log("/classes/messages");
     response.end(JSON.stringify(results));
-  } else if (request.url === "/classes/messages" && request.method === "OPTIONS") {
+  } else if (routes[1] === "classes" && request.method === "OPTIONS") {
     console.log('inside OPSTIONS');
     response.writeHead(200, headers);
     response.end();
-  } else if (request.url === "/classes/messages" && request.method === "POST") {
+  } else if (routes[1] === "classes" && request.method === "POST") {
     console.log('inside POST');
     var body = "";
     request.on('data', function(data) {
@@ -70,6 +71,9 @@ exports.requestHandler = function(request, response) {
       storage.push(JSON.parse(body));
       response.end(JSON.stringify(storage));
     });
+  } else {
+    response.writeHead(404, headers);
+    response.end();
   }
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to

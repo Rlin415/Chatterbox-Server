@@ -1,6 +1,6 @@
 // YOUR CODE HERE:
 var app = {
-  server: 'http://127.0.0.1:3000/classes/messages',
+  server: 'http://127.0.0.1:3000/classes/',
   invalid: ['script', 'img', 'body', 'iframe', 'input', 'link', 'table', 'div', 'object']
 };
 
@@ -56,11 +56,10 @@ app.fetch = function() {
 
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: app.server,
+    url: app.server + client.currRoom,
     type: 'GET',
     contentType: 'application/json',
     // data: 'where={"roomname":"' + client.currRoom + '"}',
-    data: "",
     success: function(data) {
       console.log('Retrieved', data, 'for room:' , client.currRoom);
       client.messages = [];
