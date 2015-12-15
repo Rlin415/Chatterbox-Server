@@ -115,7 +115,6 @@ app.handleSubmit = function() {
     text: $('#message').val(),
     roomname: client.currRoom
   };
-  console.log(message);
   app.send(message);
 };
 
